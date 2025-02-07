@@ -1,8 +1,10 @@
 // 📌 auth.service.js (Authentication Service)
 import User from "../models/user.model.js";
-import { generateTokens } from "../utils/token.helper.js";
+import jwt from 'jsonwebtoken'
+import { generateAccesTokens, generateTokens } from "../utils/token.helper.js";
 import { comparePassword, hashPassword } from "../utils/password.helper.js";
 import { errorHandler } from "../middlewares/error.middleware.js";
+import { config } from "../config/env.js";
 
 
 export const login = async (req) => {
@@ -50,7 +52,21 @@ const register = async (name, email, password) => {
 };
 
 
-export default { login, register };
+const refreshTokenService = (token) => {
+  try {
+    const decoded = jwt.verify(token, config.REFRESH_SECRET);  // Decode using refresh token secret
+    const userId = decoded.id;  // Extract the user ID from the refresh token
+    const { accessToken } = generateAccesTokens({ _id: userId });  // Generate only access token
+    return accessToken;
+  }
+  catch (err) {
+    console.log("error------:",err)
+    errorHandler(err)
+  }
+
+}
+
+export default { login, register, refreshTokenService };
 
 
 
