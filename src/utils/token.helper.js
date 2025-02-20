@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { config } from '../config/env';
+import { config } from '../config/env.js';
 
 export const generateTokens = (user) => {
     const accessToken = jwt.sign({ id: user._id }, config.ACCESS_SECRET, { expiresIn: '10m' });

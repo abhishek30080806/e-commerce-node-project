@@ -7,12 +7,10 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 import { errorHandler } from "./src/middlewares/error.middleware.js";
+import swaggerSpec from "./src/config/swagger.js"; // Import the Swagger specification
+import swaggerUi from "swagger-ui-express"; // Import Swagger UI express
 import authRoutes from "./src/routes/auth.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
-// import productRoutes from "./src/routes/product.routes.js";
-// import orderRoutes from "./src/routes/order.routes.js";
-// import paymentRoutes from "./src/routes/payment.routes.js";
-// import reviewRoutes from "./src/routes/review.routes.js";
 
 // Fix __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -39,11 +37,10 @@ app.use(limiter);
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
-// app.use("/api/products", productRoutes);
-// app.use("/api/orders", orderRoutes);
-// app.use("/api/payments", paymentRoutes);
-// app.use("/api/reviews", reviewRoutes);
+app.use("api/user",userRoutes)
+
+// Swagger Documentation Route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Error Handling Middleware
 app.use(errorHandler);
